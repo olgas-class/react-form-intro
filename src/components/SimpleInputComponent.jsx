@@ -1,4 +1,7 @@
+import { useState } from "react";
+
 const SimpleInputComponent = () => {
+  const [firstName, setFirstName] = useState("");
   return (
     <div className="container">
       <h1>Hello</h1>
