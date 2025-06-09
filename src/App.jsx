@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TodosList from "./components/TodosList";
 import Alert from "./components/Alert";
 
@@ -7,7 +7,9 @@ function App() {
 
   const [newTodo, setNewTodo] = useState("");
   const [todosList, setTodosList] = useState(initialTasks);
+  const [filteredList, setFilteredList] = useState(todosList);
   const [error, setError] = useState(false);
+  const [search, setSearch] = useState("");
 
   const gestisciSubmit = (event) => {
     event.preventDefault();
@@ -34,6 +36,13 @@ function App() {
     setNewTodo(event.target.value);
   };
 
+  useEffect(() => {
+    const filteredList = todosList.filter((curTodo) =>
+      curTodo.toLowerCase().includes(search.trim().toLowerCase())
+    );
+    setFilteredList(filteredList);
+  }, [search]);
+
   return (
     <>
       <div className="container">
@@ -55,9 +64,20 @@ function App() {
             <Alert content="Nessun valore inserito. Riprova" type="danger" />
           )}
 
+          <div className="my-3">
+            <input
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              type="search"
+              className="form-control"
+              aria-label="Cerca Todo"
+              placeholder="Cerca ..."
+            />
+          </div>
+
           {todosList.length > 0 ? (
             <TodosList
-              todos={todosList}
+              todos={filteredList}
               deleteTodo={(index) => {
                 gestisciDelete(index);
               }}
